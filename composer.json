@@ -22,7 +22,7 @@
     },
     "require": {
         "yiisoft/yii2": "~2",
-		"yiisoft/payeer": "*"
+		"yii-dream-team/payeer": "*"
     },
     "autoload": {
         "psr-4": {
