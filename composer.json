@@ -1,0 +1,32 @@
+{
+    "name": "yii-dream-team/yii2-payeer",
+    "description": "Yii2 Payeer Component",
+    "type": "yii2-extension",
+    "keywords": [
+        "yii2",
+        "payeer",
+    ],
+    "homepage": "https://github.com/yii-dream-team/yii2-payeer",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexey Samoylov",
+            "email": "alexey.samoylov@gmail.com",
+            "homepage": "http://yiiblog.ru",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/yii-dream-team/yii2-payeer/issues",
+        "source": "https://github.com/yii-dream-team/yii2-payeer"
+    },
+    "require": {
+        "yiisoft/yii2": "~2",
+		"yiisoft/payeer": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "yiidreamteam\\payeer\\": "./src"
+        }
+    }
+}
