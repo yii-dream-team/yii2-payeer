@@ -4,7 +4,7 @@
     "type": "yii2-extension",
     "keywords": [
         "yii2",
-        "payeer",
+        "payeer"
     ],
     "homepage": "https://github.com/yii-dream-team/yii2-payeer",
     "license": "MIT",
