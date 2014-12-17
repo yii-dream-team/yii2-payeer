@@ -7,6 +7,7 @@ namespace yiidreamteam\payeer;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
+use yiidreamteam\payeer\events\GatewayEvent;
 
 class Api extends Component
 {
@@ -14,7 +15,7 @@ class Api extends Component
     public $accountNumber;
     /** @var string */
     public $apiId;
-    /** @var string  */
+    /** @var string */
     public $apiSecret;
     /** @var string Shop id */
     public $merchantId;
@@ -48,7 +49,7 @@ class Api extends Component
      * @param array $data
      * @return boolean
      */
-    protected function checkSign(Array $data)
+    protected function checkSign($data)
     {
         $parts = [
             ArrayHelper::getValue($data, 'm_operation_id'),
@@ -67,4 +68,39 @@ class Api extends Component
         $sign = strtoupper(hash('sha256', implode(':', $parts)));
         return ArrayHelper::getValue($data, 'm_sign') == $sign;
     }
+
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function processResult($data)
+    {
+        // required parameters
+        if (!in_array(array_keys($data), ['m_operation_id', 'm_sign']))
+            return false;
+
+        // we process only succeeded payments
+        if (ArrayHelper::getValue($data, 'm_status') != 'success')
+            return false;
+
+        if (!$this->checkSign($data))
+            return false;
+
+        $event = new GatewayEvent(['gatewayData' => $data]);
+        $transaction = \Yii::$app->getDb()->beginTransaction();
+        try {
+            $this->trigger(GatewayEvent::EVENT_PAYMENT_REQUEST, $event);
+            if (!$event->handled)
+                throw new \Exception();
+            $this->trigger(GatewayEvent::EVENT_PAYMENT_SUCCESS, $event);
+            $transaction->commit();
+        } catch (\Exception $e) {
+            $transaction->rollback();
+            \Yii::error('Payment processing error: ' . $e->getMessage(), 'Payeer');
+            return false;
+        }
+
+        return true;
+    }
+
 }
