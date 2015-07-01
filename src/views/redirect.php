@@ -23,8 +23,9 @@
     </form>
 </div>
 
-<script>
-    $(document).ready(function () {
-        $('#payeer-checkout-form').submit();
-    });
-</script>
+<?php
+$js = <<<JS
+    $('#payeer-checkout-form').submit();
+JS;
+$this->registerJs($js, \yii\web\View::POS_READY);
+?>
