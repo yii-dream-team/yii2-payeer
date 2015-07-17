@@ -76,7 +76,7 @@ class Api extends Component
     public function processResult($data)
     {
         // required parameters
-        if (!in_array(array_keys($data), ['m_operation_id', 'm_sign']))
+        if (!array_key_exists('m_operation_id', $data) || !array_key_exists('m_sign', $data))
             return false;
 
         // we process only succeeded payments
