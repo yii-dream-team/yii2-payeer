@@ -25,7 +25,7 @@ class Api extends Component
     public $merchantCurrency = 'USD';
 
     /** @var \CPayeer */
-    public $api;
+    public $payeer;
 
     /**
      * @inheritdoc
@@ -38,8 +38,8 @@ class Api extends Component
         assert(isset($this->apiId));
         assert(isset($this->apiSecret));
 
-        $this->api = new \CPayeer($this->accountNumber, $this->apiId, $this->apiSecret);
-        if (!$this->api->isAuth())
+        $this->payeer = new \CPayeer($this->accountNumber, $this->apiId, $this->apiSecret);
+        if (!$this->payeer->isAuth())
             throw new InvalidConfigException('Invalid payeer credentials');
     }
 
