@@ -6,6 +6,8 @@
 namespace yiidreamteam\payeer\actions;
 
 use yii\base\Action;
+use yii\helpers\ArrayHelper;
+use yii\web\BadRequestHttpException;
 use yiidreamteam\payeer\Api;
 
 class ResultAction extends Action
@@ -25,11 +27,16 @@ class ResultAction extends Action
 
     public function run()
     {
-        $invoiceId = \Yii::$app->request->post('m_orderid');
-        $result = $this->api->processResult(\Yii::$app->request->post());
+        $post =  \Yii::$app->request->post();
+        $orderId = ArrayHelper::getValue($post, 'm_orderid', false);
+
+        if (false === $orderId)
+            throw new BadRequestHttpException('Missing order id');
+
+        $result = $this->api->processResult($post);
         if ($result)
-            echo $invoiceId . '|success';
+            echo $orderId . '|success';
         else
-            echo $invoiceId . '|error';
+            echo $orderId . '|error';
     }
 }
